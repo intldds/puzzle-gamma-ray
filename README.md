@@ -32,13 +32,19 @@ Puzzle write-up
 The goal of this puzzle is to create a new nullifier (`nullifier_hack`) in order to be able to double spend using the protocol.
 
 The reason why this might be possible is that Bob used the MNT7653 cycle of curves, which is represented in **Weierstrass form** in the circuit. 
-In this cycle of curves, both (x, y) and (x, -y) are valid points for spending.
+In this cycle of curves, **both (x, y) and (x, -y) are valid points for spending**.
 
-Therefore, we need to calculate a new secret (`secret_hack`) by using the additive inverse (negation) of `secret`.
-The tricky part here is to negate in the right scalar field (base field of MNT4).
+Therefore, only the *x-coordinate* of an elliptic curve point is used as the leaf node and there are **2 possible
+points** with the same *x-coordinate*.
+
+Considering that we already know `(secret * G)`, we need to find its negation, that is `(-secret * G)`.
+The tricky part is that `leaked_secret` is specified in `MNT4BigFr`, but the *x-coordinate* is computed over `MNT6BigFr`,
+so we need to calculate our `secret_hack` as `MNT4BigFr::from(MNT6BigFr::MODULUS) - leaked_secret`.
 
 Once we calculate our `secret_hack`, all we have to do is calculate the `nullifier_hack` the same way as the original one 
 was calculated: by using the **Poseidon hash function** on the *new* secret.
 
-This was a fun puzzle which allowed me to understand better **nullifiers** and increase my awareness to the cycle of curves
-that we use and their potential vulnerabilities.
+Now, our `secret_hack` and `nullifier_hack` are able to pass the circuit checking parameters.
+
+This was a fun puzzle which allowed me to have a better understanding of **nullifiers** and increase my awareness to 
+the cycle of curves that we use and their potential vulnerabilities.
