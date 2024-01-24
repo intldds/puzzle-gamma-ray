@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/miguelpereira/Desktop/puzzle-gamma-ray/target/release/build/typenum-9e30921709dd1a14/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/miguelpereira/Desktop/puzzle-gamma-ray/target/release/build/typenum-9e30921709dd1a14/out/op.rs
