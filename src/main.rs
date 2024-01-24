@@ -188,8 +188,13 @@ fn main() {
 
     /* Enter your solution here */
 
-    let nullifier_hack = MNT4BigFr::from(0);
-    let secret_hack = MNT4BigFr::from(0);
+    // Calculate the secret_hack by using the additive inverse (negation) of the original secret
+    // (exploring the fact that both (x, y) and (x, -y) are valid points for spending in the
+    // MNT7653 cycle of curves
+    let secret_hack    = MNT4BigFr::from(MNT6BigFr::MODULUS) - leaked_secret;
+
+    // Calculate the new nullifier by using the Pedersen hash function on the new secret
+    let nullifier_hack = <LeafH as CRHScheme>::evaluate(&leaf_crh_params, vec![secret_hack]).unwrap();
 
     /* End of solution */
 
